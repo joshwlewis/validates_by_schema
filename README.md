@@ -1,6 +1,7 @@
 # Validates By Schema (validates_by_schema)
+### For Rails and ActiveRecord
 
-Validate from your database schema. Keep your code DRY. Automatic validations based on your database column type and limits.
+Automatic validation based on your database schema column types and limits. Keep your code DRY by inferring column validations from table properties!
 
 ## Usage
 
@@ -26,8 +27,6 @@ create_table "widgets", :force => true do |t|
   t.integer  "wheel_count",      :null => false
   t.decimal  "thickness",       :precision => 4, :scale => 4
   t.string   "color"
-  t.datetime "created_at",                                       :null => false
-  t.datetime "updated_at",                                       :null => false
 end
 ```
 
