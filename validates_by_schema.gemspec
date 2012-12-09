@@ -18,4 +18,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", ">= 3.1.0"
   s.add_dependency "validates_timeliness", "~> 3.0.14"
+
+  s.add_development_dependency "rspec-rails"
 end

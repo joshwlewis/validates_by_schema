@@ -50,4 +50,4 @@ module ValidatesBySchema
   end
 end
 
-ActiveRecord::Base.send(:include, ValidatesBySchema)
+#ActiveRecord::Base.send(:include, ValidatesBySchema)
