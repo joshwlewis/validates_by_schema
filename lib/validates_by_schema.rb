@@ -3,6 +3,7 @@ module ValidatesBySchema
 
   module ClassMethods
     def validates_by_schema options={}
+      return unless table_exists?
       # Don't auto validated primary keys or timestamps
       columns = self.columns.reject(&:primary)
       columns.reject!{|c| ['updated_at', 'created_at'].include? c.name}
@@ -50,4 +51,4 @@ module ValidatesBySchema
   end
 end
 
-#ActiveRecord::Base.send(:include, ValidatesBySchema)
+ActiveRecord::Base.send(:include, ValidatesBySchema)

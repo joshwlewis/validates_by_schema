@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
   s.add_dependency "validates_timeliness", "~> 3.0.14"
 
   s.add_development_dependency "rspec-rails"
+  s.add_development_dependency "sqlite3"
 end
