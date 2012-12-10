@@ -1,0 +1,18 @@
+secret:
+  name: "Secret"
+  model: "secret-42"
+  description: "Life, the Universe, Everything"
+  wheels: 4
+  doors: 2
+  price: 4242.42
+  cost: 42.42
+  completion: 0.424
+  rating: 42.4242
+  score: 4242.42
+  published_at: <%= Time.now.to_datetime %>
+  invented_on: <%= Time.now.to_date %>
+  startup_time: <%= 1.hour.ago %>
+  shutdown_time: <%= 4.hours.from_now %>
+  enabled: true
+  data: 1010010010100100100011111
+

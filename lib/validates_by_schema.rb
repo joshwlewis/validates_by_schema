@@ -37,8 +37,9 @@ module ValidatesBySchema
           validates c.name, presence: !c.null,
             numericality: { allow_nil: c.null }
         when :string, :text
-          validates c.name, presence: !c.null, length: { maximum: c.limit.to_i, 
-            allow_nil: c.null}
+          val_hash = { presence: !c.null }
+          val_hash[:length] = { maximum: c.limit, allow_nil: c.null} if c.limit
+          validates c.name, val_hash
         when :boolean
           validates c.name, inclusion: { in: [true, false], 
             allow_nil: c.null }
