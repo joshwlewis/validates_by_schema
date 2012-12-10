@@ -17,8 +17,8 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", ">= 3.1.0"
-  s.add_dependency "validates_timeliness", "~> 3.0.14"
 
   s.add_development_dependency "rspec-rails"
+  s.add_development_dependency "shoulda-matchers"
   s.add_development_dependency "sqlite3"
 end

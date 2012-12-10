@@ -20,7 +20,7 @@ module ValidatesBySchema
       columns.each do |c|
         case c.type
         when :integer
-          val_hash = {presence: c.null, numericality: { 
+          val_hash = {presence: !c.null, numericality: { 
             only_integer: true, allow_nil: c.null}}
           if c.limit
             max = (2 ** (8 * c.limit)) / 2
@@ -30,21 +30,20 @@ module ValidatesBySchema
           validates c.name, val_hash
         when :decimal
           maximum = 10.0**(c.precision-c.scale) - 10.0**(-c.scale)
-          validates c.name, presence: c.null, numericality: { 
+          validates c.name, presence: !c.null, numericality: { 
             allow_nil: c.null, greater_than_or_equal_to: -maximum,
             less_than_or_equal_to: maximum }
         when :float
-          validates c.name, presence: c.null,
+          validates c.name, presence: !c.null,
             numericality: { allow_nil: c.null }
         when :string, :text
-          validates c.name, presence: c.null, length: { maximum: c.limit.to_i, 
+          validates c.name, presence: !c.null, length: { maximum: c.limit.to_i, 
             allow_nil: c.null}
         when :boolean
           validates c.name, inclusion: { in: [true, false], 
             allow_nil: c.null }
         when :date, :datetime, :time
-          validates c.name, presence: c.null, timeliness: { allow_nil: c.null,
-            type: c.type }
+          validates c.name, presence: !c.null
         end
       end
     end
