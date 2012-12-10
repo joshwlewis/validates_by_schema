@@ -1,5 +1,5 @@
 # Validates By Schema (validates_by_schema)
-### For Rails and ActiveRecord
+[![Build Status](https://secure.travis-ci.org/joshwlewis/validates_by_schema.png)](http://travis-ci.org/joshwlewis/validates_by_schema) 
 
 Automatic validation based on your database schema column types and limits. Keep your code DRY by inferring column validations from table properties!
 
