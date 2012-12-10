@@ -9,11 +9,11 @@ Gem::Specification.new do |s|
   s.version     = ValidatesBySchema::VERSION
   s.authors     = ["Josh Lewis"]
   s.email       = ["josh.w.lewis@gmail.com"]
-  s.homepage    = "http://www.emergentcoils.com"
-  s.summary     = "Default validation for ActiveRecord based on database column attributes"
-  s.description = "Validate based on database column attributes! Automagically validate presence, length, numericality, inclusion, and timeliness of ActiveRecord columns."
+  s.homepage    = "http://github.com/joshwlewis/validates_by_schema"
+  s.summary     = "Automatic validation based on your database schema column types and limits."
+  s.description = "Keep your code DRY by inferring column validations from table properties! Automagically validate presence, length, numericality, and inclusion of ActiveRecord backed columns."
 
-  s.files = Dir["{lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", ">= 3.1.0"
