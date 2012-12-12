@@ -5,6 +5,7 @@ class ValidatesBySchema::ValidationOption
 
   def initialize(column)
     @column = column
+    puts column.inspect
   end
 
   def presence?
