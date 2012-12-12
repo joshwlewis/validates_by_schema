@@ -5,3 +5,15 @@ rvm:
   - 1.9.3
   - 1.8.7
   - ree
+env:
+  - DB=sqlite
+  - DB=mysql
+  - DB=postgresql
+script:
+  - cd spec/dummy
+  - RAILS_ENV=test bundle exec rake db:create db:migrate --trace
+  - bundle exec rake db:test:prepare
+  - bundle exec rspec
+#before_script:
+#  - mysql -e 'create database my_app_test'
+#  - psql -c 'create database my_app_test' -U postgres
