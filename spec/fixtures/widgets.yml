@@ -14,5 +14,5 @@ secret:
   startup_time: <%= 1.hour.ago %>
   shutdown_time: <%= 4.hours.from_now %>
   enabled: true
-  data: 1010010010100100100011111
+  data: <%= 'the question'.unpack('b*') %>
 
