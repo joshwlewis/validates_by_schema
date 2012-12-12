@@ -15,9 +15,7 @@ gem "validates_by_schema"
 3. Call it from your ActiveRecord model:
 ```ruby
 class Widget < ActiveRecord::Base
-
-  validates_by_schema
-
+    validates_by_schema
 end
 ```
 
