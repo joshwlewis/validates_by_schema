@@ -56,6 +56,8 @@ GEM
     mocha (0.10.5)
       metaclass (~> 0.0.1)
     multi_json (1.4.0)
+    mysql2 (0.3.11)
+    pg (0.14.1)
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.2)
@@ -116,6 +118,8 @@ PLATFORMS
 
 DEPENDENCIES
   jquery-rails
+  mysql2
+  pg
   rspec-rails
   shoulda-matchers
   sqlite3
