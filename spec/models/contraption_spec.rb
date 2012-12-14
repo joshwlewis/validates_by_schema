@@ -21,8 +21,13 @@ describe Contraption do
     context :integer do
       it { should validate_presence_of(:wheels)}
       it { should validate_numericality_of(:wheels).only_integer }
-      it { should allow_value(10**100).for(:wheels)}
-      it { should allow_value(-10**100).for(:wheels)}
+      it { should allow_value(242424).for(:wheels)}
+      it { should allow_value(-42424).for(:wheels)}
+      if ENV['DB'] == 'mysql'
+        it { should_not allow_value(10**100).for(:wheels)}
+        it { should_not allow_value(-10**100).for(:wheels)}
+      end
+
 
       it { should_not validate_presence_of(:doors)}
       it { should validate_numericality_of(:doors).only_integer }
