@@ -6,6 +6,7 @@ Automatic validation based on your database schema column types and limits. Keep
 ## Install
 
 1. Add it to your Gemfile:
+
 ```ruby
 gem "validates_by_schema"
 ```
@@ -13,6 +14,7 @@ gem "validates_by_schema"
 2. Then `bundle`
 
 3. Call it from your ActiveRecord model:
+
 ```ruby
 class Widget < ActiveRecord::Base
   validates_by_schema
