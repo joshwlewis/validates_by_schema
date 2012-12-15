@@ -38,19 +38,20 @@ validates_by_schema except: [:name, :title]
 Say you had a table setup like this:
 ```ruby
 create_table "widgets", :force => true do |t|
-  t.integer  "wheel_count", :null => false
+  t.integer  "quantity", :limit => 2
   t.decimal  "thickness", :precision => 4, :scale => 4
-  t.string   "color"
+  t.string   "color", :null => false
 end
 ```
 
-Then these validations run when your model `validates_by_schema`:
+Then these validations are inferred when you add `validates_by_schema` to your model:
+
 ```ruby
-validates :wheel_count, presence: true, numericality: { allow_nil: false, 
-  greater_than: -2147483647, less_than: 2147483647}
+validates :wheel_count, numericality: { allow_nil: true,
+  greater_than: -32768, less_than: 32768}
 validates :thickness, numericality: {allow_nil: true, 
   less_than_or_equal_to: 0.999, greater_than_or_equal_to: -0.999}
-validates :color, length: {allow_nil: true, maximum: 255}
+validates :color, presence: true, length: {allow_nil: true, maximum: 255}
 ```
 
 This is tested with postgres, mysql, and sqlite3. It will most likely work with any other database Rails supports.
