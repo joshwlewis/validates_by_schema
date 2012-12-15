@@ -3,7 +3,29 @@
 
 Automatic validation based on your database schema column types and limits. Keep your code DRY by inferring column validations from table properties!
 
-## Install
+## Example
+
+Say you had a table setup like this:
+
+```ruby
+create_table "widgets", :force => true do |t|
+  t.integer  "quantity", :limit => 2
+  t.decimal  "thickness", :precision => 4, :scale => 4
+  t.string   "color", :null => false
+end
+```
+
+Then these validations are inferred when you add `validates_by_schema` to your model:
+
+```ruby
+validates :wheel_count, numericality: { allow_nil: true,
+  greater_than: -32768, less_than: 32768}
+validates :thickness, numericality: {allow_nil: true, 
+  less_than_or_equal_to: 0.999, greater_than_or_equal_to: -0.999}
+validates :color, presence: true, length: {allow_nil: false, maximum: 255}
+```
+
+## Installation
 
 1. Add it to your Gemfile:
 
@@ -23,7 +45,7 @@ end
 
 ## Usage
 
-You can also whitelist/blacklist columns with :only and :except options
+You can also whitelist or blacklist columns with :only or :except options, respectively:
 
 ```ruby
 validates_by_schema only: [:body, :description]
@@ -33,25 +55,8 @@ validates_by_schema only: [:body, :description]
 validates_by_schema except: [:name, :title]
 ```
 
-## Example
+## Notes
 
-Say you had a table setup like this:
-```ruby
-create_table "widgets", :force => true do |t|
-  t.integer  "quantity", :limit => 2
-  t.decimal  "thickness", :precision => 4, :scale => 4
-  t.string   "color", :null => false
-end
-```
+Column properties are inferred by your database adapter (like pg, mysql2, sqlite3), and does not depend on migration files or schema.rb. As such, you could use this on projects where the database where Rails is not in control of the database configuration.
 
-Then these validations are inferred when you add `validates_by_schema` to your model:
-
-```ruby
-validates :wheel_count, numericality: { allow_nil: true,
-  greater_than: -32768, less_than: 32768}
-validates :thickness, numericality: {allow_nil: true, 
-  less_than_or_equal_to: 0.999, greater_than_or_equal_to: -0.999}
-validates :color, presence: true, length: {allow_nil: true, maximum: 255}
-```
-
-This is tested with postgres, mysql, and sqlite3. It will most likely work with any other database Rails supports.
+This has been tested with mysql, postgresql, and sqlite3. It should work with any other database that has reliable adapter.
