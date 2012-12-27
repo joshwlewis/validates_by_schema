@@ -18,7 +18,7 @@ end
 Then these validations are inferred when you add `validates_by_schema` to your model:
 
 ```ruby
-validates :wheel_count, numericality: { allow_nil: true,
+validates :quantity, numericality: { allow_nil: true,
   greater_than: -32768, less_than: 32768}
 validates :thickness, numericality: {allow_nil: true, 
   less_than_or_equal_to: 0.999, greater_than_or_equal_to: -0.999}
