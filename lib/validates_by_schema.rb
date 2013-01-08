@@ -9,10 +9,8 @@ module ValidatesBySchema
       columns = schema_validateable_columns
 
       # Allow user to specify :only or :except options
-      if only = options.delete(:only).try(:map, &:to_s)
-        columns.select!{|c| only.include? c.name}
-      elsif except = options.delete(:except).try(:map, &:to_s)
-        columns.reject!{|c| except.include? c.name}
+      [:only => :select!, :except => :reject!].each do |k,v|
+        columns.send(v){|c| options[k].include? c.name} if options[k]
       end
 
       columns.each do |c|
