@@ -6,6 +6,7 @@ env:
   - DB=sqlite
   - DB=mysql
   - DB=postgresql
+script: 'bundle exec rake spec'
 before_script:
   - cd spec/dummy
   - RAILS_ENV=test bundle exec rake db:reset
