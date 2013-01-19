@@ -1,5 +1,4 @@
 language: ruby
-script: "bundle exec rspec"
 rvm:
   - 1.9.2
   - 1.9.3
@@ -9,5 +8,5 @@ env:
   - DB=postgresql
 before_script:
   - cd spec/dummy
-  - RAILS_ENV=test bundle exec rake db:create db:migrate --trace
+  - RAILS_ENV=test bundle exec rake db:reset
   - bundle exec rake db:test:prepare
