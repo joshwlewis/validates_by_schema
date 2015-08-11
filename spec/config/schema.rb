@@ -29,5 +29,6 @@ ActiveRecord::Schema.define(version: 20_121_210_034_140) do
     t.time 'shutdown_time',                                             null: false
     t.boolean 'enabled'
     t.binary 'data'
+    t.integer 'parent_id', null: false
   end
 end

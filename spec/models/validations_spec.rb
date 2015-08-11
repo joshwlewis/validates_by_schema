@@ -22,7 +22,8 @@ describe 'validates by schema' do
       startup_time: 1.hour.ago,
       shutdown_time: 4.hours.from_now,
       enabled: true,
-      data: 'the question'.unpack('b*').to_s }
+      data: 'the question'.unpack('b*').to_s,
+      parent: Widget.new }
   end
 
   context 'plain' do
@@ -102,6 +103,11 @@ describe 'validates by schema' do
       context :time do
         it { should_not validate_presence_of(:startup_time) }
         it { should validate_presence_of(:shutdown_time) }
+      end
+
+      context :belongs_to do
+        it { should validate_presence_of(:parent) }
+        it { should allow_value(Widget.new).for(:parent) }
       end
     end
   end
