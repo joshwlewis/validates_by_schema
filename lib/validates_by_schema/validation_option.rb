@@ -40,7 +40,7 @@ class ValidatesBySchema::ValidationOption
   end
 
   def length
-    {:maximum => column.limit, :allow_nil => column.null }
+    { maximum: column.limit, allow_nil: column.null }
   end
 
   def inclusion?
@@ -48,23 +48,19 @@ class ValidatesBySchema::ValidationOption
   end
 
   def inclusion
-    {:in => [true, false], :allow_nil => column.null}
+    { in: [true, false], allow_nil: column.null }
   end
 
   def integer_max
-    (2 ** (8 * column.limit)) / 2 if column.limit
+    (2**(8 * column.limit)) / 2 if column.limit
   end
 
   def decimal_max
-    10.0**(column.precision-column.scale) - 10.0**(-column.scale)
-  end
-
-  def string_max
-    column.limit
+    10.0**(column.precision - column.scale) - 10.0**(-column.scale)
   end
 
   def to_hash
-    [:presence, :numericality, :length, :inclusion].inject({}) do |h,k|
+    [:presence, :numericality, :length, :inclusion].inject({}) do |h, k|
       send(:"#{k}?") ? h.merge(k => send(k)) : h
     end
   end
@@ -72,5 +68,4 @@ class ValidatesBySchema::ValidationOption
   def to_s
     to_hash.inspect
   end
-
 end
