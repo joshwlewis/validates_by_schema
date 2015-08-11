@@ -31,7 +31,7 @@ class ValidatesBySchema::ValidationOption
       numericality[:less_than_or_equal_to] = decimal_max
       numericality[:greater_than_or_equal_to] = -decimal_max
     end
-    numericality[:allow_nil] = column.null
+    numericality[:allow_nil] = true
     numericality
   end
 
@@ -40,7 +40,7 @@ class ValidatesBySchema::ValidationOption
   end
 
   def length
-    { maximum: column.limit, allow_nil: column.null }
+    { maximum: column.limit, allow_nil: true }
   end
 
   def inclusion?
