@@ -34,7 +34,7 @@ describe 'validates by schema' do
         it { should_not validate_presence_of(:name) }
         it { should validate_length_of(:name).is_at_most(50) }
         it { should validate_presence_of(:model) }
-        if ENV['DB'] && ENV['DB'] != 'sqlite'
+        if ENV['DB'] == 'mysql'
           it { should validate_length_of(:model).is_at_most(255) }
         end
       end
