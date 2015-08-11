@@ -1,18 +1,18 @@
 sqlite: &sqlite
   adapter: sqlite3
-  database: db/<%= Rails.env %>.sqlite3
+  database: spec/db/<%= ENV["RAILS_ENV"] %>.sqlite3
 
 mysql: &mysql
   adapter: mysql2
   username: root
   password:
-  database: validates_by_schema_<%= Rails.env %>
+  database: validates_by_schema_<%= ENV["RAILS_ENV"] %>
 
 postgresql: &postgresql
   adapter: postgresql
   username: postgres
   password:
-  database: validates_by_schema_<%= Rails.env %>
+  database: validates_by_schema_<%= ENV["RAILS_ENV"] %>
   min_messages: ERROR
 
 defaults: &defaults
