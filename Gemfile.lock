@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    validates_by_schema (0.3.0)
+    codez-validates_by_schema (0.3.0)
       activerecord (>= 3.1.0)
 
 GEM
@@ -93,10 +93,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  codez-validates_by_schema!
   mysql2
   pg
   rake
   rspec-rails
   shoulda-matchers
   sqlite3
-  validates_by_schema!

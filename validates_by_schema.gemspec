@@ -5,11 +5,11 @@ require 'validates_by_schema/version'
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = 'validates_by_schema'
+  s.name        = 'codez-validates_by_schema'
   s.version     = ValidatesBySchema::VERSION
   s.authors     = ['Josh Lewis', 'Pascal Zumkehr']
-  s.email       = ['josh.w.lewis@gmail.com', 'pascal@codez.ch']
-  s.homepage    = 'http://github.com/joshwlewis/validates_by_schema'
+  s.email       = ['josh.w.lewis@gmail.com', 'spam@codez.ch']
+  s.homepage    = 'http://github.com/codez/validates_by_schema'
   s.summary     = 'Automatic validation based on your database schema column types and limits.'
   s.description = 'Keep your code DRY by inferring column validations from table properties! Automagically validate presence, length, numericality, and inclusion of ActiveRecord backed columns.'
 
