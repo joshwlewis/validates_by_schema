@@ -4,27 +4,39 @@ module ValidatesBySchema
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def validates_by_schema options={}
+
+    def validates_by_schema(options = {})
       return unless table_exists?
-      columns = schema_validateable_columns
 
-      # Allow user to specify :only or :except options
-      [:only => :select!, :except => :reject!].each do |k,v|
-        columns.send(v){|c| options[k].include? c.name} if options[k]
+      customized_columns(options).each do |c|
+        ValidationOption.new(self, c).define!
       end
+    end
 
-      columns.each do |c|
-        vo = ValidationOption.new(c).to_hash
-        validates c.name, vo if vo.present?
+    private
+
+    def customized_columns(options)
+      # Allow user to specify :only or :except options
+      schema_validateable_columns.tap do |columns|
+        { only: :select!, except: :reject! }.each do |k, v|
+          if options[k]
+            attrs = Array(options[k]).collect(&:to_s)
+            columns.send(v) { |c| attrs.include?(c.name) }
+          end
+        end
       end
     end
 
     def schema_validateable_columns
-      # Don't auto validate primary keys or timestamps
-      columns.reject do |c| 
-        c.primary || %w(updated_at created_at).include?(c.name)
+      columns.reject do |c|
+        ignored_columns_for_validates_by_schema.include?(c.name)
       end
     end
+
+    def ignored_columns_for_validates_by_schema
+      [primary_key.to_s, 'created_at', 'updated_at', 'deleted_at']
+    end
+
   end
 end
 
