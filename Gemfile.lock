@@ -100,3 +100,6 @@ DEPENDENCIES
   shoulda-matchers
   sqlite3
   validates_by_schema!
+
+BUNDLED WITH
+   1.10.6
