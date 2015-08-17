@@ -23,7 +23,8 @@ describe 'validates by schema' do
       shutdown_time: 4.hours.from_now,
       enabled: true,
       data: 'the question'.unpack('b*').to_s,
-      parent: Widget.new }
+      parent: Widget.new,
+      kind: 'one' }
   end
 
   context 'plain' do
@@ -110,6 +111,11 @@ describe 'validates by schema' do
       context :belongs_to do
         it { should validate_presence_of(:parent) }
         it { should allow_value(Widget.new).for(:parent) }
+      end
+
+      context :enum do
+        it { should validate_presence_of(:kind) }
+        it { should allow_value('other').for(:kind) }
       end
     end
   end

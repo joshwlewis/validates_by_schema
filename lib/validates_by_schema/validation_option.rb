@@ -1,11 +1,23 @@
 class ValidatesBySchema::ValidationOption
   # column here must be an ActiveRecord column
   # i.e. MyARModel.columns.first
-  attr_accessor :column
+  attr_accessor :klass, :column
 
-  def initialize(column)
+  def initialize(klass, column)
+    @klass = klass
     @column = column
   end
+
+  def define!
+    if association
+      klass.validates association.name, presence: true unless column.null
+    else
+      options = to_hash
+      klass.validates column.name, options if options.present?
+    end
+  end
+
+  private
 
   def presence?
     presence && column.type != :boolean
@@ -15,8 +27,12 @@ class ValidatesBySchema::ValidationOption
     !column.null
   end
 
+  def enum?
+    klass.respond_to?(:defined_enums) && klass.defined_enums.has_key?(column.name)
+  end
+
   def numericality?
-    [:integer, :decimal, :float].include? column.type
+    [:integer, :decimal, :float].include?(column.type) && !enum?
   end
 
   def numericality
@@ -27,7 +43,7 @@ class ValidatesBySchema::ValidationOption
         numericality[:less_than] = integer_max
         numericality[:greater_than] = -integer_max
       end
-    elsif column.type == :decimal
+    elsif column.type == :decimal && decimal_max
       numericality[:less_than_or_equal_to] = decimal_max
       numericality[:greater_than_or_equal_to] = -decimal_max
     end
@@ -56,7 +72,13 @@ class ValidatesBySchema::ValidationOption
   end
 
   def decimal_max
-    10.0**(column.precision - column.scale) - 10.0**(-column.scale)
+    10.0**(column.precision - column.scale) - 10.0**(-column.scale) if column.precision && column.scale
+  end
+
+  def association
+    @association ||= klass.reflect_on_all_associations(:belongs_to).find do |a|
+      a.foreign_key.to_s == column.name
+    end
   end
 
   def to_hash

@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20_121_210_034_140) do
     t.integer 'doors',         limit: 2
     t.decimal 'price',                       precision: 6, scale: 2
     t.decimal 'cost',                        precision: 4, scale: 2, null: false
-    t.decimal 'completion',                  precision: 3, scale: 3
+    t.decimal 'completion'
     t.float 'rating'
     t.float 'score',                                                 null: false
     t.datetime 'published_at'
@@ -30,5 +30,6 @@ ActiveRecord::Schema.define(version: 20_121_210_034_140) do
     t.boolean 'enabled'
     t.binary 'data'
     t.integer 'parent_id',                                           null: false
+    t.integer 'kind',                                                null: false
   end
 end
