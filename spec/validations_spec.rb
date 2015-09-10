@@ -53,34 +53,34 @@ describe 'validates by schema' do
         it { should validate_presence_of(:wheels) }
         it { should validate_numericality_of(:wheels).only_integer }
         it { should allow_value(242_424).for(:wheels) }
-        it { should allow_value(-42_424).for(:wheels) }
-        if ENV['DB'] == 'mysql'
-          it { should_not allow_value(10**100).for(:wheels) }
-          it { should_not allow_value(-10**100).for(:wheels) }
+        it { should allow_value(-242_424).for(:wheels) }
+        if ENV['DB'] != 'mysql'
+          it { should allow_value(10**100).for(:wheels) }
+          it { should allow_value(-10**100).for(:wheels) }
         end
 
         it { should_not validate_presence_of(:doors) }
         it { should validate_numericality_of(:doors).only_integer }
-        it { should allow_value(250).for(:doors) }
-        it { should allow_value(-500).for(:doors) }
-        it { should_not allow_value(10**100).for(:doors) }
-        it { should_not allow_value(-10**100).for(:doors) }
+        it { should allow_value(32767).for(:doors) }
+        it { should allow_value(-32767).for(:doors) }
+        it { should_not allow_value(32768).for(:doors) }
+        it { should_not allow_value(-32768).for(:doors) }
       end
 
       context :decimal do
         it { should_not validate_presence_of(:price) }
         it { should validate_numericality_of(:price) }
-        it { should allow_value(-1205).for(:price) }
-        it { should allow_value(4242.42).for(:price) }
-        it { should_not allow_value(24_242).for(:price) }
-        it { should_not allow_value(-42_424.24).for(:price) }
+        it { should allow_value(-9_999.99).for(:price) }
+        it { should allow_value(9_999.99).for(:price) }
+        it { should_not allow_value(10_000).for(:price) }
+        it { should_not allow_value(-10_000).for(:price) }
 
         it { should validate_presence_of(:cost) }
         it { should validate_numericality_of(:cost) }
-        it { should allow_value(42).for(:cost) }
-        it { should allow_value(-24.24).for(:cost) }
-        it { should_not allow_value(424).for(:cost) }
-        it { should_not allow_value(-242.42).for(:cost) }
+        it { should allow_value(99.99).for(:cost) }
+        it { should allow_value(-99.99).for(:cost) }
+        it { should_not allow_value(100).for(:cost) }
+        it { should_not allow_value(-100).for(:cost) }
       end
 
       context :float do
@@ -134,10 +134,8 @@ describe 'validates by schema' do
         it { should_not validate_numericality_of(:wheels) }
         it { should allow_value(242_424).for(:wheels) }
         it { should allow_value(-42_424).for(:wheels) }
-        if ENV['DB'] == 'mysql'
-          it { should allow_value(10**100).for(:wheels) }
-          it { should allow_value(-10**100).for(:wheels) }
-        end
+        it { should allow_value(10**100).for(:wheels) }
+        it { should allow_value(-10**100).for(:wheels) }
       end
 
       context :decimal do
@@ -161,9 +159,9 @@ describe 'validates by schema' do
         it { should validate_numericality_of(:wheels).only_integer }
         it { should allow_value(242_424).for(:wheels) }
         it { should allow_value(-42_424).for(:wheels) }
-        if ENV['DB'] == 'mysql'
-          it { should_not allow_value(10**100).for(:wheels) }
-          it { should_not allow_value(-10**100).for(:wheels) }
+        if ENV['DB'] != 'mysql'
+          it { should allow_value(10**100).for(:wheels) }
+          it { should allow_value(-10**100).for(:wheels) }
         end
       end
 
