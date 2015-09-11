@@ -33,9 +33,20 @@ task default: :spec
 
 
 namespace :db do
-  task :create do
+  task :drop do
+    puts "dropping"
     case ENV['DB']
-    when'postgresql'
+    when 'postgresql'
+      exec "psql -c 'drop database if exists validates_by_schema_test;' -U postgres"
+    when 'mysql'
+      exec "mysql -e 'drop database if exists validates_by_schema_test;'"
+    end
+  end
+
+  task :create do
+    puts "creating"
+    case ENV['DB']
+    when 'postgresql'
       exec "psql -c 'create database validates_by_schema_test;' -U postgres"
     when 'mysql'
       exec "mysql -e 'create database validates_by_schema_test;'"

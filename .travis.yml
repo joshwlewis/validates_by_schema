@@ -10,4 +10,5 @@ env:
   - DB=postgresql
 script: 'bundle exec rake spec'
 before_script:
+  - bundle exec rake db:drop
   - bundle exec rake db:create

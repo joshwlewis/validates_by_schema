@@ -11,17 +11,17 @@ Coveralls.wear!
 # Load up our code
 require 'validates_by_schema'
 
-# hook up to the database
+# Setup the database
 conf = YAML.load(ERB.new(File.read(File.join(File.dirname(__FILE__), 'config', 'database.yml'))).result)
 ActiveRecord::Base.establish_connection(conf['test'])
+
+load(File.join(File.dirname(__FILE__), 'config', 'schema.rb'))
 
 # Add support test models to the load path.
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'support', 'models'))
 
 # Require all support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
-
-load(File.join(File.dirname(__FILE__), 'config', 'schema.rb'))
 
 RSpec.configure do |config|
   config.around do |example|
