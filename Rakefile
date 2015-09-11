@@ -29,4 +29,16 @@ RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = ['--backtrace']
 end
 
-task :default => :spec
+task default: :spec
+
+
+namespace :db do
+  task :create do
+    case ENV['DB']
+    when'postgresql'
+      exec "psql -c 'create database validates_by_schema_test;' -U postgres"
+    when 'mysql'
+      exec "mysql -e 'create database validates_by_schema_test;'"
+    end
+  end
+end
