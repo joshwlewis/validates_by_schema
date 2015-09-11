@@ -4,3 +4,4 @@ log/*.log
 pkg/
 spec/db/*.sqlite3
 .project
+coverage

@@ -1,9 +1,5 @@
 # encoding: utf-8
-
 require 'spec_helper'
-require 'contraption'
-require 'gadget'
-require 'gizmo'
 
 describe 'validates by schema' do
   let(:attributes) do

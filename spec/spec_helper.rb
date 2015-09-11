@@ -3,14 +3,23 @@ ENV['RAILS_ENV'] ||= 'test'
 require 'yaml'
 require 'active_record'
 require 'shoulda-matchers'
+require 'coveralls'
+
+# Start code coverage tracking.
+Coveralls.wear!
+
+# Load up our code
 require 'validates_by_schema'
 
-# Requires supporting ruby files with custom matchers and macros, etc,
-# in spec/support/ and its subdirectories.
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'support', 'models'))
-
+# hook up to the database
 conf = YAML.load(ERB.new(File.read(File.join(File.dirname(__FILE__), 'config', 'database.yml'))).result)
 ActiveRecord::Base.establish_connection(conf['test'])
+
+# Add support test models to the load path.
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), 'support', 'models'))
+
+# Require all support files
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 load(File.join(File.dirname(__FILE__), 'config', 'schema.rb'))
 
