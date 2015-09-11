@@ -1,8 +1,9 @@
 # Validates By Schema (validates_by_schema)
-[![Build Status](https://secure.travis-ci.org/joshwlewis/validates_by_schema.png)](http://travis-ci.org/joshwlewis/validates_by_schema)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/joshwlewis/validates_by_schema)
-[![Dependency Status](https://gemnasium.com/joshwlewis/validates_by_schema.png)](https://gemnasium.com/joshwlewis/validates_by_schema)
-[![Gem Version](https://badge.fury.io/rb/validates_by_schema.png)](http://badge.fury.io/rb/validates_by_schema)
+[![Gem Version](http://img.shields.io/gem/v/validates_by_schema.svg?style=flat)](https://rubygems.org/gems/validates_by_schema)
+[![Build Status](http://img.shields.io/travis/joshwlewis/validates_by_schema.svg?style=flat)](https://travis-ci.org/joshwlewis/validates_by_schema)
+[![Dependency Status](http://img.shields.io/gemnasium/joshwlewis/validates_by_schema.svg?style=flat)](https://gemnasium.com/joshwlewis/validates_by_schema)
+[![Coverage Status](http://img.shields.io/coveralls/joshwlewis/validates_by_schema.svg?style=flat)](https://coveralls.io/r/joshwlewis/validates_by_schema)
+[![Code Climate](http://img.shields.io/codeclimate/github/joshwlewis/validates_by_schema.svg?style=flat)](https://codeclimate.com/github/joshwlewis/validates_by_schema)
 
 Automatic validation based on your database schema column types and limits. Keep your code DRY by inferring column validations from table properties!
 
