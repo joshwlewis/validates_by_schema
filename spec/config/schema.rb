@@ -31,5 +31,6 @@ ActiveRecord::Schema.define(version: 20_121_210_034_140) do
     t.binary 'data'
     t.integer 'parent_id',                                           null: false
     t.integer 'kind',                                                null: false
+    t.string 'list', array: true, limit: 3
   end
 end

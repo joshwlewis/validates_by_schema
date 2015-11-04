@@ -20,7 +20,8 @@ describe 'validates by schema' do
       enabled: true,
       data: 'the question'.unpack('b*').to_s,
       parent: Widget.new,
-      kind: 'one' }
+      kind: 'one',
+      list: ['abc']}
   end
 
   context 'plain' do
@@ -112,6 +113,15 @@ describe 'validates by schema' do
       context :enum do
         it { should validate_presence_of(:kind) }
         it { should allow_value('other').for(:kind) }
+      end
+
+      if ENV['DB'] == 'postgresql'
+        context :array do
+          it { should allow_value(['abc', 'def', 'ghi', 'jkl']).for(:list) }
+          # this value will be rejected by the db, but the validation would require a custom
+          # validator.
+          it { should allow_value(['abcdef']).for(:list) }
+        end
       end
     end
   end

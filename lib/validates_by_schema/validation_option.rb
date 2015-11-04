@@ -51,8 +51,12 @@ class ValidatesBySchema::ValidationOption
     numericality
   end
 
+  def array?
+    column.respond_to?(:array) && column.array
+  end
+
   def length?
-    [:string, :text].include?(column.type) && column.limit
+    [:string, :text].include?(column.type) && column.limit && !array?
   end
 
   def length
