@@ -11,6 +11,10 @@ module ValidatesBySchema
       customized_columns(options).each do |c|
         ValidationOption.new(self, c).define!
       end
+
+    rescue ::ActiveRecord::NoDatabaseError
+      # Since `db:create` and other tasks from Rails 5.2.0 might load models,
+      # we need to swallow this error to execute `db:create` properly.
     end
 
     private
