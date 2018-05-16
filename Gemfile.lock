@@ -121,7 +121,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (~> 4.2)
   coveralls (~> 0.7)
   mysql2
   pg
