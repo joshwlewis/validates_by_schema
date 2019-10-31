@@ -10,7 +10,9 @@ class ValidatesBySchema::ValidationOption
 
   def define!
     if association
-      klass.validates association.name, presence: true unless column.null
+      if !ActiveRecord::Base.belongs_to_required_by_default && !column.null
+        klass.validates association.name, presence: true
+      end
     else
       options = to_hash
       klass.validates column.name, options if options.present?
@@ -94,4 +96,5 @@ class ValidatesBySchema::ValidationOption
   def to_s
     to_hash.inspect
   end
+
 end

@@ -5,3 +5,4 @@ pkg/
 spec/db/*.sqlite3
 .project
 coverage
+*.gemfile.lock

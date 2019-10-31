@@ -52,8 +52,12 @@ describe 'validates by schema' do
         it { should allow_value(242_424).for(:wheels) }
         it { should allow_value(-242_424).for(:wheels) }
         if ENV['DB'] != 'mysql'
-          it { should allow_value(10**100).for(:wheels) }
-          it { should allow_value(-10**100).for(:wheels) }
+          it { should allow_value(2_147_483_647).for(:wheels) }
+          it { should allow_value(-2_147_483_647).for(:wheels) }
+          if ENV['DB'] != 'postgresql'
+            it { should allow_value(10**100).for(:wheels) }
+            it { should allow_value(-10**100).for(:wheels) }
+          end
         end
 
         it { should_not validate_presence_of(:doors) }
@@ -106,8 +110,13 @@ describe 'validates by schema' do
       end
 
       context :belongs_to do
-        it { should validate_presence_of(:parent) }
+        if !ActiveRecord::Base.belongs_to_required_by_default
+          # belongs_to_required_by_default produces message 'must exist' instead of 'can't be blank'
+          it { should validate_presence_of(:parent) }
+        end
+
         it { should allow_value(Widget.new).for(:parent) }
+        it { should_not allow_value(nil).for(:parent) }
       end
 
       context :enum do
@@ -166,8 +175,12 @@ describe 'validates by schema' do
         it { should allow_value(242_424).for(:wheels) }
         it { should allow_value(-42_424).for(:wheels) }
         if ENV['DB'] != 'mysql'
-          it { should allow_value(10**100).for(:wheels) }
-          it { should allow_value(-10**100).for(:wheels) }
+          it { should allow_value(2_147_483_647).for(:wheels) }
+          it { should allow_value(-2_147_483_647).for(:wheels) }
+          if ENV['DB'] != 'postgresql'
+            it { should allow_value(10**100).for(:wheels) }
+            it { should allow_value(-10**100).for(:wheels) }
+          end
         end
       end
 
@@ -176,6 +189,50 @@ describe 'validates by schema' do
         it { should_not validate_numericality_of(:price) }
         it { should allow_value('1000000').for(:price) }
       end
+    end
+  end
+
+  context 'subclass' do
+    subject { SubContraption.new attributes }
+
+    context 'performs validations as well' do
+      context :string do
+        it { should_not validate_presence_of(:name) }
+        it { should validate_length_of(:name).is_at_most(50) }
+        it { should validate_presence_of(:model) }
+      end
+    end
+  end
+
+  context 'multiple threads' do
+    subject { Contraption.new attributes }
+
+    it 'defines validations only once' do
+      subject.list = nil
+      subject.model = nil
+      5.times do
+        Thread.new do
+          Contraption.new.valid?
+        end
+      end
+
+      expect(subject).not_to be_valid
+      expect(subject.errors.full_messages).to eq(["Model can't be blank"])
+    end
+  end
+
+  context 'reset_column_information' do
+    subject { Contraption.new attributes }
+
+    it 'does not duplicate validations' do
+      subject.list = nil
+      expect(subject).to be_valid
+
+      Contraption.reset_column_information
+
+      subject.model = nil
+      expect(subject).not_to be_valid
+      expect(subject.errors.full_messages).to eq(["Model can't be blank"])
     end
   end
 end

@@ -1,9 +1,15 @@
 # validates_by_schema Changelog
 
-All notable changes to Unitwise will be documented in this file, starting at
+All notable changes to validates_by_schema will be documented in this file, starting at
 version 0.3.0.
 
-Unitwise uses semantic versioning.
+validates_by_schema uses semantic versioning.
+
+## 0.4.0 - 2019-10-31
+
+- Do not load schema on class definition, add validations when schema is loaded.
+- Add support for ActiveRecord 6.0.
+- Remove support for ActiveRecord 4.2.
 
 ## 0.3.1 - 2018-05-16
 

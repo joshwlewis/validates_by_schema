@@ -1,3 +1,6 @@
+require 'active_support/concern'
+require 'active_support/lazy_load_hooks'
+
 module ValidatesBySchema
   autoload :ValidationOption, 'validates_by_schema/validation_option'
 
@@ -6,32 +9,42 @@ module ValidatesBySchema
   module ClassMethods
 
     def validates_by_schema(options = {})
-      return unless table_exists?
+      @validates_by_schema_options = options
+      define_schema_validations if schema_loaded?
+    end
 
-      customized_columns(options).each do |c|
-        ValidationOption.new(self, c).define!
-      end
-
-    rescue ::ActiveRecord::NoDatabaseError
-      # Since `db:create` and other tasks from Rails 5.2.0 might load models,
-      # we need to swallow this error to execute `db:create` properly.
+    def load_schema!
+      super
+      # define schema validations lazy to avoid accessing the database
+      # at class load time.
+      define_schema_validations
     end
 
     private
 
-    def customized_columns(options)
+    def define_schema_validations
+      return unless @validates_by_schema_options
+
+      customized_schema_validatable_columns.each do |c|
+        ValidationOption.new(self, c).define!
+      end
+
+      @validates_by_schema_options = nil
+    end
+
+    def customized_schema_validatable_columns
       # Allow user to specify :only or :except options
-      schema_validateable_columns.tap do |columns|
+      schema_validatable_columns.tap do |columns|
         { only: :select!, except: :reject! }.each do |k, v|
-          if options[k]
-            attrs = Array(options[k]).collect(&:to_s)
+          if @validates_by_schema_options[k]
+            attrs = Array(@validates_by_schema_options[k]).collect(&:to_s)
             columns.send(v) { |c| attrs.include?(c.name) }
           end
         end
       end
     end
 
-    def schema_validateable_columns
+    def schema_validatable_columns
       columns.reject do |c|
         ignored_columns_for_validates_by_schema.include?(c.name)
       end

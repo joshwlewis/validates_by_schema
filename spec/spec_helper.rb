@@ -15,6 +15,8 @@ require 'validates_by_schema'
 conf = YAML.load(ERB.new(File.read(File.join(File.dirname(__FILE__), 'config', 'database.yml'))).result)
 ActiveRecord::Base.establish_connection(conf['test'])
 
+ActiveRecord::Base.belongs_to_required_by_default = false
+
 load(File.join(File.dirname(__FILE__), 'config', 'schema.rb'))
 
 # Add support test models to the load path.
