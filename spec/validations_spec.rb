@@ -3,7 +3,8 @@ require 'spec_helper'
 
 describe 'validates by schema' do
   let(:attributes) do
-    { name: 'Secret',
+    {
+      name: 'Secret',
       model: 'secret-42',
       description: 'Life, the Universe, Everything',
       wheels: 4,
@@ -21,7 +22,8 @@ describe 'validates by schema' do
       data: 'the question'.unpack('b*').to_s,
       parent: Widget.new,
       kind: 'one',
-      list: ['abc']}
+      list: ['abc']
+    }
   end
 
   context 'plain' do
@@ -130,6 +132,69 @@ describe 'validates by schema' do
           # this value will be rejected by the db, but the validation would require a custom
           # validator.
           it { should allow_value(['abcdef']).for(:list) }
+        end
+      end
+    end
+
+    context 'validates uniqueness' do
+      let(:valid_attributes) do
+        attrs = attributes.dup
+
+        attrs[:list] = nil
+        attrs[:parent_id] = 23
+        attrs[:model] = 'secret-23'
+        attrs[:wheels] = 3
+        attrs[:name] = 'Geheimnis'
+
+        attrs
+      end
+      let(:existing_widget) { Widget.new(valid_attributes) }
+      before do
+        subject.list = nil
+        existing_widget.save!
+      end
+
+      context :simple_unique_index do
+        context 'has assumptions' do
+          it { expect(existing_widget.model).to eq 'secret-23' }
+        end
+
+        it { should validate_uniqueness_of(:model) }
+        it { should_not allow_value('secret-23').for(:model) }
+        it { should allow_value('secret-42').for(:model) }
+      end
+
+      context :multi_column_unique_index do
+        before { existing_widget.update(wheels: 4) }
+
+        context 'has assumptions' do
+          it { expect(existing_widget.name).to eq 'Geheimnis' }
+          it { expect(existing_widget.wheels).to eq 4 }
+          it { expect(subject.wheels).to eq 4 }
+        end
+
+        it { should validate_uniqueness_of(:name).scoped_to(:wheels) }
+        it { should_not allow_value('Geheimnis').for(:name) }
+        it do
+          subject.wheels = 3
+          should allow_value('Geheimnis').for(:name)
+        end
+      end
+
+      if ENV['DB'] == 'postgresql'
+        context :partial_unique_index do
+          context 'has assumptions' do
+            it { expect(existing_widget.doors).to eq 2 }
+            it { expect(existing_widget).to be_enabled }
+            it { should be_enabled }
+          end
+
+          it { should validate_uniqueness_of(:doors) }
+          it { should_not allow_value(2).for(:doors) }
+          it do
+            existing_widget.update(enabled: false)
+            should allow_value(2).for(:doors)
+          end
         end
       end
     end

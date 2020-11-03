@@ -53,6 +53,29 @@ class ValidatesBySchema::ValidationOption
     numericality
   end
 
+  def uniqueness?
+    unique_indexes.one?
+  end
+
+  def uniqueness
+    unique_index = unique_indexes.first
+    {
+      scope: unique_index.columns.reject { |col| col == column.name },
+      conditions: -> { where(unique_index.where) },
+      allow_nil: column.null
+    }
+  end
+
+  def unique_indexes
+    @unique_indexes ||= begin
+      klass
+        .connection
+        .indexes(klass.table_name)
+        .select(&:unique)
+        .select { |index| index.columns.first == column.name }
+    end
+  end
+
   def array?
     column.respond_to?(:array) && column.array
   end
@@ -88,7 +111,7 @@ class ValidatesBySchema::ValidationOption
   end
 
   def to_hash
-    [:presence, :numericality, :length, :inclusion].inject({}) do |h, k|
+    [:presence, :numericality, :length, :inclusion, :uniqueness].inject({}) do |h, k|
       send(:"#{k}?") ? h.merge(k => send(k)) : h
     end
   end
