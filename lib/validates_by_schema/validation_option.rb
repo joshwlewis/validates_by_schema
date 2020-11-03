@@ -10,16 +10,30 @@ class ValidatesBySchema::ValidationOption
 
   def define!
     if association
-      if !ActiveRecord::Base.belongs_to_required_by_default && !column.null
-        klass.validates association.name, presence: true
-      end
+      # Only presence and uniqueness are handled for associations.
+      # presence on the association name, uniqueness on the column name.
+      define_belongs_to_presence_validation
     else
-      options = to_hash
-      klass.validates column.name, options if options.present?
+      define_validations(to_hash)
     end
+    define_uniqueness_validations if ValidatesBySchema.validate_uniqueness
   end
 
   private
+
+  def define_belongs_to_presence_validation
+    klass.validates association.name, presence: true if !ActiveRecord::Base.belongs_to_required_by_default && presence
+  end
+
+  def define_uniqueness_validations
+    uniqueness.each do |options|
+      define_validations(uniqueness: options)
+    end
+  end
+
+  def define_validations(options)
+    klass.validates column.name, options if options.present?
+  end
 
   def presence?
     presence && column.type != :boolean
@@ -51,6 +65,30 @@ class ValidatesBySchema::ValidationOption
     end
     numericality[:allow_nil] = true
     numericality
+  end
+
+  def uniqueness
+    unique_indexes.map do |index|
+      {
+        scope: index.columns.reject { |col| col == column.name },
+        conditions: -> { where(index.where) },
+        allow_nil: column.null,
+        case_sensitive: case_sensitive?,
+        if: ->(model) { index.columns.any? { |c| model.send("#{c}_changed?") } }
+      }
+    end
+  end
+
+  def unique_indexes
+    klass
+      .connection
+      .indexes(klass.table_name)
+      .select { |index| index.unique && index.columns.first == column.name }
+  end
+
+  def case_sensitive?
+    !klass.connection.respond_to?(:collation) ||
+      !klass.connection.collation.end_with?('_ci')
   end
 
   def array?

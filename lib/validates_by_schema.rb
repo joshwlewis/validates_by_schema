@@ -6,6 +6,9 @@ module ValidatesBySchema
 
   extend ActiveSupport::Concern
 
+  mattr_accessor :validate_uniqueness
+  self.validate_uniqueness = true
+
   module ClassMethods
 
     def validates_by_schema(options = {})

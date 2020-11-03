@@ -18,6 +18,7 @@ create_table "widgets", force: true do |t|
   t.string  "color", null: false
   t.boolean "flagged", null: false, default: false
   t.integer "other_id", null: false
+  t.index ["other_id", "color"], unique: true
 end
 ```
 
@@ -35,6 +36,11 @@ validates :thickness, numericality: { allow_nil: true,
 validates :color, presence: true, length: { allow_nil: true, maximum: 255 }
 validates :flagged, inclusion: { in: [true, false], allow_nil: false }
 validates :other, presence: true
+validates :other_id,
+          uniqueness: {
+            scope: :color,
+            if: -> { |model| model.other_id_changed? || model.color_changed? }
+          }
 ```
 
 ## Installation
@@ -68,6 +74,12 @@ validates_by_schema except: [:name, :title]
 ```
 
 The primary key and timestamp columns are not validated.
+
+If you want to opt out of automatic uniqueness validations globally, add the following line to an initializer:
+
+```ruby
+ValidatesBySchema.validate_uniqueness = false
+```
 
 ## Notes
 

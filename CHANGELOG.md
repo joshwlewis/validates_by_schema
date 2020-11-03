@@ -5,6 +5,10 @@ version 0.3.0.
 
 validates_by_schema uses semantic versioning.
 
+## 0.5.0
+
+- Validates uniqueness based on database indizes.
+
 ## 0.4.0 - 2019-10-31
 
 - Do not load schema on class definition, add validations when schema is loaded.

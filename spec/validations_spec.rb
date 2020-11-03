@@ -1,9 +1,9 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe 'validates by schema' do
   let(:attributes) do
-    { name: 'Secret',
+    {
+      name: 'Secret',
       model: 'secret-42',
       description: 'Life, the Universe, Everything',
       wheels: 4,
@@ -21,7 +21,8 @@ describe 'validates by schema' do
       data: 'the question'.unpack('b*').to_s,
       parent: Widget.new,
       kind: 'one',
-      list: ['abc']}
+      list: ['abc']
+    }
   end
 
   context 'plain' do
@@ -54,7 +55,7 @@ describe 'validates by schema' do
         if ENV['DB'] != 'mysql'
           it { should allow_value(2_147_483_647).for(:wheels) }
           it { should allow_value(-2_147_483_647).for(:wheels) }
-          if ENV['DB'] != 'postgresql'
+          if ENV['DB'] != 'postgresql' && ActiveRecord.version.to_s >= '5.1'
             it { should allow_value(10**100).for(:wheels) }
             it { should allow_value(-10**100).for(:wheels) }
           end
@@ -133,6 +134,104 @@ describe 'validates by schema' do
         end
       end
     end
+
+    context 'validates uniqueness' do
+      let(:valid_attributes) do
+        attrs = attributes.dup
+
+        attrs[:list] = nil
+        attrs[:parent_id] = 23
+        attrs[:other_id] = 42
+        attrs[:wheels] = 3
+        attrs[:name] = 'Geheimnis'
+        attrs[:model] = 'secret-23'
+        attrs[:cost] = 9.99
+        attrs[:price] = 20.01
+
+        attrs
+      end
+      let(:existing_widget) { Widget.new(valid_attributes) }
+      before do
+        subject.list = nil
+        existing_widget.save!
+      end
+
+      context :simple_non_unique_index do
+        context 'has assumptions' do
+          it { expect(existing_widget.parent_id).to eq 23 }
+        end
+
+        it { should_not validate_uniqueness_of(:parent_id) }
+        it { should allow_value(23).for(:parent_id) }
+      end
+
+      context :simple_unique_index do
+        context 'has assumptions' do
+          it { expect(existing_widget.other_id).to eq 42 }
+        end
+
+        it { should validate_uniqueness_of(:other_id) }
+        it { should_not allow_value(42).for(:other_id) }
+        it { should allow_value(43).for(:other_id) }
+      end
+
+      context :multi_column_unique_index do
+        before { existing_widget.update!(wheels: 4) }
+
+        context 'has assumptions' do
+          it { expect(existing_widget.name).to eq 'Geheimnis' }
+          it { expect(existing_widget.wheels).to eq 4 }
+          it { expect(subject.wheels).to eq 4 }
+        end
+
+        it { should validate_uniqueness_of(:name).scoped_to(:wheels).ignoring_case_sensitivity }
+        it { should_not allow_value('Geheimnis').for(:name) }
+        it do
+          subject.wheels = 3
+          should allow_value('Geheimnis').for(:name)
+        end
+      end
+
+      context :multiple_multi_column_unique_index do
+        before { existing_widget.update!(cost: 10.0, price: 20.0) }
+
+        context 'has assumptions' do
+          it { expect(existing_widget.model).to eq 'secret-23' }
+          it { expect(existing_widget.cost).to eq 10.0 }
+          it { expect(existing_widget.price).to eq 20.0 }
+          it { expect(subject.cost).to eq 42.42 }
+          it { expect(subject.price).to eq 4242.42 }
+        end
+
+        it { should allow_value('secret-23').for(:model) }
+        it do
+          subject.cost = 10.0
+          should_not allow_value('secret-23').for(:model)
+        end
+        it do
+          subject.cost = 10.0
+          subject.price = 20.0
+          should_not allow_value('secret-23').for(:model)
+        end
+      end
+
+      if ENV['DB'] == 'postgresql'
+        context :partial_unique_index do
+          context 'has assumptions' do
+            it { expect(existing_widget.doors).to eq 2 }
+            it { expect(existing_widget).to be_enabled }
+            it { should be_enabled }
+          end
+
+          it { should validate_uniqueness_of(:doors) }
+          it { should_not allow_value(2).for(:doors) }
+          it do
+            existing_widget.update(enabled: false)
+            should allow_value(2).for(:doors)
+          end
+        end
+      end
+    end
   end
 
   context 'with except' do
@@ -149,8 +248,11 @@ describe 'validates by schema' do
         it { should_not validate_numericality_of(:wheels) }
         it { should allow_value(242_424).for(:wheels) }
         it { should allow_value(-42_424).for(:wheels) }
-        it { should allow_value(10**100).for(:wheels) }
-        it { should allow_value(-10**100).for(:wheels) }
+        if ENV['DB'] == 'postgresql' && ActiveRecord.version.to_s >= '5.1'
+          # Indexed int colums produce ActiveModel::RangeError in Rails 5
+          it { should allow_value(10**100).for(:wheels) }
+          it { should allow_value(-10**100).for(:wheels) }
+        end
       end
 
       context :decimal do
@@ -177,7 +279,7 @@ describe 'validates by schema' do
         if ENV['DB'] != 'mysql'
           it { should allow_value(2_147_483_647).for(:wheels) }
           it { should allow_value(-2_147_483_647).for(:wheels) }
-          if ENV['DB'] != 'postgresql'
+          if ENV['DB'] != 'postgresql' && ActiveRecord.version.to_s >= '5.1'
             it { should allow_value(10**100).for(:wheels) }
             it { should allow_value(-10**100).for(:wheels) }
           end

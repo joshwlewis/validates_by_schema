@@ -30,7 +30,15 @@ ActiveRecord::Schema.define(version: 20_121_210_034_140) do
     t.boolean 'enabled'
     t.binary 'data'
     t.integer 'parent_id',                                           null: false
+    t.integer 'other_id'
     t.integer 'kind',                                                null: false
     t.string 'list', array: true, limit: 3
+
+    t.index 'parent_id'
+    t.index ['name', 'wheels'], unique: true
+    t.index 'other_id', unique: true
+    t.index ['doors'], unique: true, where: 'enabled = true'
+    t.index ['model', 'price'], unique: true
+    t.index ['model', 'cost'], unique: true
   end
 end
