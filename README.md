@@ -1,9 +1,9 @@
 # Validates By Schema (validates_by_schema)
+
 [![Gem Version](http://img.shields.io/gem/v/validates_by_schema.svg?style=flat)](https://rubygems.org/gems/validates_by_schema)
-[![Build Status](http://img.shields.io/travis/joshwlewis/validates_by_schema.svg?style=flat)](https://travis-ci.org/joshwlewis/validates_by_schema)
+[![Build Status](http://img.shields.io/github/workflow/status/joshwlewis/validates_by_schema/Build?style=flat)](https://github.com/joshwlewis/validates_by_schema/actions/workflows/build.yml)
 [![Coverage Status](http://img.shields.io/coveralls/joshwlewis/validates_by_schema.svg?style=flat)](https://coveralls.io/r/joshwlewis/validates_by_schema)
 [![Code Climate](http://img.shields.io/codeclimate/maintainability/joshwlewis/validates_by_schema.svg?style=flat)](https://codeclimate.com/github/joshwlewis/validates_by_schema)
-
 
 Automatic validation based on your database schema column types and limits. Keep your code DRY by inferring column validations from table properties!
 

@@ -1,0 +1,78 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+    branches: [$default-branch]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        ruby-version: ["2.5", "2.6", "2.7", "3.0"]
+        database:
+          - sqlite
+          - postgresql
+          - mysql
+        gemfile:
+          - Gemfile
+          - spec/ci/rails60.gemfile
+          - spec/ci/rails52.gemfile
+          - spec/ci/rails50.gemfile
+        exclude:
+          - ruby-version: "3.0"
+            gemfile: spec/ci/rails52.gemfile
+          - ruby-version: "3.0"
+            gemfile: spec/ci/rails50.gemfile
+
+    services:
+      postgresql:
+        image: postgres:11
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/${{ matrix.gemfile }}
+      DB: ${{ matrix.database }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+      - name: Prepare database
+        env:
+          PGPASSWORD: postgres
+        run: |
+          bundle exec rake db:drop
+          bundle exec rake db:create
+      - name: Run tests
+        run: bundle exec rake
+      - name: Report to coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: "./coverage/lcov.info"

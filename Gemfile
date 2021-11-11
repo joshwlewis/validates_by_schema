@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'coveralls', '~> 0.7'
+gem 'simplecov', require: false
+gem 'simplecov-lcov', require: false
 
 gemspec

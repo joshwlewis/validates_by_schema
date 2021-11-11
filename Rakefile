@@ -31,25 +31,24 @@ end
 
 task default: :spec
 
-
 namespace :db do
   task :drop do
-    puts "dropping"
+    puts 'dropping'
     case ENV['DB']
     when 'postgresql'
-      exec "psql -c 'drop database if exists validates_by_schema_test;' -U postgres"
+      exec "psql -c 'drop database if exists validates_by_schema_test;' -U postgres -h localhost"
     when 'mysql'
-      exec "mysql -e 'drop database if exists validates_by_schema_test;'"
+      exec "mysql -e 'drop database if exists validates_by_schema_test;' -u root -h 127.0.0.1"
     end
   end
 
   task :create do
-    puts "creating"
+    puts 'creating'
     case ENV['DB']
     when 'postgresql'
-      exec "psql -c 'create database validates_by_schema_test;' -U postgres"
+      exec "psql -c 'create database validates_by_schema_test;' -U postgres -h localhost"
     when 'mysql'
-      exec "mysql -e 'create database validates_by_schema_test;'"
+      exec "mysql -e 'create database validates_by_schema_test;' -u root -h 127.0.0.1"
     end
   end
 end
