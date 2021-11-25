@@ -5,7 +5,7 @@ version 0.3.0.
 
 validates_by_schema uses semantic versioning.
 
-## 0.5.0
+## 0.5.0 - 2021-11-25
 
 - Validates uniqueness based on database indizes.
 

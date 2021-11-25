@@ -86,3 +86,11 @@ ValidatesBySchema.validate_uniqueness = false
 Column properties are inferred by your database adapter (like pg, mysql2, sqlite3), and does not depend on migration files or schema.rb. As such, you could use this on projects where the database where Rails is not in control of the database configuration.
 
 This has been tested with mysql, postgresql, and sqlite3. It should work with any other database that has reliable adapter.
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/joshwlewis/validates_by_schema.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

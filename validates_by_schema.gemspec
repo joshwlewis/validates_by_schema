@@ -9,12 +9,19 @@ Gem::Specification.new do |s|
   s.version     = ValidatesBySchema::VERSION
   s.authors     = ['Josh Lewis', 'Pascal Zumkehr']
   s.email       = ['josh.w.lewis@gmail.com', 'pascal@codez.ch']
-  s.homepage    = 'http://github.com/joshwlewis/validates_by_schema'
+  s.homepage    = 'https://github.com/joshwlewis/validates_by_schema'
   s.summary     = 'Automatic validation based on your database schema column types and limits.'
-  s.description = 'Keep your code DRY by inferring column validations from table properties! Automagically validate presence, length, numericality, and inclusion of ActiveRecord backed columns.'
+  s.description = 'Keep your code DRY by inferring column validations from table properties! ' \
+                  'Automagically validate presence, length, numericality, inclusion and ' \
+                  'uniqueness of ActiveRecord backed columns.'
+  s.license     = 'MIT'
+
+  s.metadata['homepage_uri'] = s.homepage
+  s.metadata['source_code_uri'] = 'https://github.com/joshwlewis/validates_by_schema'
+  s.metadata['changelog_uri'] = 'https://github.com/joshwlewis/validates_by_schema/blob/master/CHANGELOG.md'
 
   s.files = Dir['{lib}/**/*'] + ['MIT-LICENSE', 'Rakefile', 'README.md']
-  s.test_files = Dir['test/**/*']
+  s.test_files = Dir['spec/**/*']
   s.require_paths = ['lib']
 
   s.add_dependency 'activerecord', '>= 5.0.0'
