@@ -36,7 +36,7 @@ class ValidatesBySchema::ValidationOption
   end
 
   def presence?
-    presence && column.type != :boolean
+    presence && column.type != :boolean && column.default.nil?
   end
 
   def presence

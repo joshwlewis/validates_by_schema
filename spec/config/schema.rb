@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20_121_210_034_140) do
     t.integer 'other_id'
     t.integer 'kind',                                                null: false
     t.string 'list', array: true, limit: 3
+    t.string 'fallback', default: 'value', null: false
 
     t.index 'parent_id'
     t.index ['name', 'wheels'], unique: true
