@@ -22,7 +22,15 @@ end
 require 'validates_by_schema'
 
 # Setup the database
-conf = YAML.load(ERB.new(File.read(File.join(File.dirname(__FILE__), 'config', 'database.yml'))).result)
+conf = nil
+begin
+  # load with psych 4 (>= ruby 3.1)
+  conf = YAML.load(ERB.new(File.read(File.join(File.dirname(__FILE__), 'config', 'database.yml'))).result, aliases: true)
+rescue ArgumentError
+  # fallback to psych 3 syntax
+  conf = YAML.load(ERB.new(File.read(File.join(File.dirname(__FILE__), 'config', 'database.yml'))).result)
+end
+
 ActiveRecord::Base.establish_connection(conf['test'])
 
 ActiveRecord::Base.belongs_to_required_by_default = false
