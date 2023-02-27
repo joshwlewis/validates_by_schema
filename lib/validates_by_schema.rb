@@ -28,11 +28,16 @@ module ValidatesBySchema
     def define_schema_validations
       return unless @validates_by_schema_options
 
+      unique_indexes = ValidatesBySchema.validate_uniqueness ? fetch_unique_indexes : []
       customized_schema_validatable_columns.each do |c|
-        ValidationOption.new(self, c).define!
+        ValidationOption.new(self, c, unique_indexes).define!
       end
 
       @validates_by_schema_options = nil
+    end
+
+    def fetch_unique_indexes
+      connection.indexes(table_name).select(&:unique)
     end
 
     def customized_schema_validatable_columns

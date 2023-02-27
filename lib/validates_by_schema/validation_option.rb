@@ -1,11 +1,12 @@
 class ValidatesBySchema::ValidationOption
   # column here must be an ActiveRecord column
   # i.e. MyARModel.columns.first
-  attr_accessor :klass, :column
+  attr_accessor :klass, :column, :unique_indexes
 
-  def initialize(klass, column)
+  def initialize(klass, column, unique_indexes = [])
     @klass = klass
     @column = column
+    @unique_indexes = unique_indexes.select { |index| index.columns.first == column.name }
   end
 
   def define!
@@ -16,13 +17,15 @@ class ValidatesBySchema::ValidationOption
     else
       define_validations(to_hash)
     end
-    define_uniqueness_validations if ValidatesBySchema.validate_uniqueness
+    define_uniqueness_validations
   end
 
   private
 
   def define_belongs_to_presence_validation
-    klass.validates association.name, presence: true if !ActiveRecord::Base.belongs_to_required_by_default && presence
+    if !ActiveRecord::Base.belongs_to_required_by_default && presence
+      klass.validates association.name, presence: true
+    end
   end
 
   def define_uniqueness_validations
@@ -77,13 +80,6 @@ class ValidatesBySchema::ValidationOption
         if: ->(model) { index.columns.any? { |c| model.send("#{c}_changed?") } }
       }
     end
-  end
-
-  def unique_indexes
-    klass
-      .connection
-      .indexes(klass.table_name)
-      .select { |index| index.unique && index.columns.first == column.name }
   end
 
   def case_sensitive?
