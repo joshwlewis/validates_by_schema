@@ -37,7 +37,7 @@ module ValidatesBySchema
     end
 
     def fetch_unique_indexes
-      connection.indexes(table_name).select(&:unique)
+      connection.schema_cache.indexes(table_name).select(&:unique)
     end
 
     def customized_schema_validatable_columns
@@ -59,7 +59,7 @@ module ValidatesBySchema
     end
 
     def ignored_columns_for_validates_by_schema
-      [primary_key.to_s, 'created_at', 'updated_at', 'deleted_at']
+      ['id', 'created_at', 'updated_at', 'deleted_at']
     end
 
   end
