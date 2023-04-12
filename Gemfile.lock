@@ -45,7 +45,7 @@ GEM
     mini_portile2 (2.8.1)
     minitest (5.17.0)
     mysql2 (0.5.4)
-    nokogiri (1.14.0)
+    nokogiri (1.14.3)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     pg (1.4.5)
