@@ -3,6 +3,8 @@
 log/*.log
 pkg/
 spec/db/*.sqlite3
+spec/db/*.sqlite3-wal
+spec/db/*.sqlite3-shm
 .project
 coverage
 *.gemfile.lock
