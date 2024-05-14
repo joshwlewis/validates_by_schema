@@ -65,7 +65,11 @@ jobs:
       - name: Run tests
         run: bundle exec rake
       - name: Report to coveralls
-        if: ${{ github.repository == 'joshwlewis/validates_by_schema' }}
+        if: |
+          github.repository == 'joshwlewis/validates_by_schema' &&
+          matrix.gemfile == 'Gemfile' &&
+          matrix.ruby-version == '3.2' &&
+          matrix.database == 'postgresql'
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
