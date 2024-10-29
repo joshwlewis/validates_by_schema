@@ -5,4 +5,4 @@ gemspec path: '../..'
 gem 'simplecov', require: false
 gem 'simplecov-lcov', require: false
 
-gem 'activerecord', '~> 6.1.0'
+gem 'activerecord', '~> 7.1.0'

@@ -5,6 +5,10 @@ version 0.3.0.
 
 validates_by_schema uses semantic versioning.
 
+## 0.5.2 - 2024-10-29
+
+- Add support for Rails 7.2, drop Ruby 3.0 and Rails 6.1
+
 ## 0.5.1 - 2023-02-28
 
 - Improve load time to configure validations.

@@ -18,6 +18,9 @@ module ValidatesBySchema
 
     def load_schema!
       super
+      # Set flag here to avoid infinite recursion
+      @schema_loaded = true
+
       # define schema validations lazy to avoid accessing the database
       # at class load time.
       define_schema_validations
