@@ -19,8 +19,12 @@ jobs:
           - mysql
         gemfile:
           - Gemfile
+          - spec/ci/rails72.gemfile
           - spec/ci/rails71.gemfile
           - spec/ci/rails70.gemfile
+        exclude:
+          - gemfile: Gemfile
+          - ruby-version: "3.1"
 
     services:
       postgresql:

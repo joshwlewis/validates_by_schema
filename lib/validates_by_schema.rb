@@ -40,12 +40,7 @@ module ValidatesBySchema
     end
 
     def fetch_unique_indexes
-      if connection.schema_cache.respond_to?(:indexes)
-        connection.schema_cache.indexes(table_name).select(&:unique)
-      else
-        # Rails < 6.0
-        connection.indexes(table_name).select(&:unique)
-      end
+      connection.schema_cache.indexes(table_name).select(&:unique)
     end
 
     def customized_schema_validatable_columns
