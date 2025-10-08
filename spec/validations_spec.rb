@@ -20,6 +20,7 @@ describe 'validates by schema' do
       enabled: true,
       data: 'the question'.unpack('b*').to_s,
       parent: Widget.new,
+      legacy_id: 0,
       kind: 'one',
       list: ['abc']
     }
@@ -132,6 +133,15 @@ describe 'validates by schema' do
           # validator.
           it { should allow_value(['abcdef']).for(:list) }
         end
+      end
+    end
+
+    context 'legacy objects' do
+      subject { LegacyContraption.new attributes.merge(id: 1, legacy_id: nil) }
+
+      context 'should skip validations on a custom primary key while applying them to the ID' do
+        it { should validate_presence_of(:id) }
+        it { should_not validate_presence_of(:legacy_id) }
       end
     end
 
