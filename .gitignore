@@ -1,4 +1,5 @@
 .bundle/
+.byebug_history
 *.gem
 log/*.log
 pkg/

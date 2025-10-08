@@ -62,7 +62,7 @@ module ValidatesBySchema
     end
 
     def ignored_columns_for_validates_by_schema
-      ['id', 'created_at', 'updated_at', 'deleted_at']
+      [primary_key, 'created_at', 'updated_at', 'deleted_at']
     end
 
   end
